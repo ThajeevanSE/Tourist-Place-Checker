@@ -1,127 +1,187 @@
-🌍 Tourist Place Checker (MERN Stack)
-A full-stack web application that helps travelers discover tourist attractions, view them on interactive maps, check real-time weather, and plan their trips efficiently.
+# 🌍 Tourist Place Checker (MERN Stack)
 
-🚀 Features
-✅ Currently Implemented
-User Authentication: Secure Registration & Login using JWT (JSON Web Tokens).
+A full-stack **MERN web application** that helps travelers discover tourist attractions, explore locations on interactive maps, check real-time weather conditions, and plan trips efficiently.
 
-Interactive Maps: Google Maps integration to search and view locations.
+---
 
-Smart Search: Autocomplete search bar for finding cities and tourist spots.
+## ✨ Overview
 
-Real-time Weather: Instantly fetches current weather conditions (Temp, Wind, Humidity) for any selected place.
+**Tourist Place Checker** is designed for travelers and explorers who want a simple yet powerful platform to:
+- Search tourist destinations
+- View locations on Google Maps
+- Check live weather conditions
+- (Upcoming) Plan trips and save favorite places
 
-Responsive UI: Built with React + Tailwind CSS for a mobile-friendly experience.
+This project is built as a **portfolio-ready MERN application**, following real-world development practices.
 
-🚧 Coming Soon (Roadmap)
-Trip Planner: Create itineraries with dates and drag-and-drop ordering.
+---
 
-Favorites System: Save places to a personal "Wishlist".
+## 🚀 Features
 
-Reviews & Ratings: Users can rate places they have visited.
+### ✅ Currently Implemented
+- 🔐 **User Authentication**
+  - Secure registration & login using **JWT (JSON Web Tokens)**
+  - Password encryption with **bcrypt**
 
-Nearby Recommendations: "Find hotels/restaurants near this location."
+- 🗺️ **Interactive Maps**
+  - Google Maps integration
+  - Search and visualize locations easily
 
-🛠️ Tech Stack
-Frontend (Client)
-Framework: React.js (Vite)
+- 🔍 **Smart Search**
+  - Autocomplete search bar for cities and tourist places
+  - Powered by Google Places API
 
-Styling: Tailwind CSS
+- 🌦️ **Real-time Weather**
+  - Displays current:
+    - Temperature
+    - Wind speed
+    - Humidity
+  - Fetched using OpenWeatherMap API
 
-Maps: @react-google-maps/api
+- 📱 **Responsive UI**
+  - Built with **React + Tailwind CSS**
+  - Fully responsive for mobile, tablet, and desktop
 
-State Management: React Context API
+---
 
-HTTP Client: Axios
+### 🚧 Roadmap (Coming Soon)
+- 🧳 **Trip Planner**
+  - Create itineraries with dates
+  - Drag-and-drop place ordering
 
-Backend (Server)
-Runtime: Node.js
+- ❤️ **Favorites / Wishlist**
+  - Save places to a personal list
 
-Framework: Express.js
+- ⭐ **Reviews & Ratings**
+  - Rate and review visited places
 
-Database: MongoDB (Mongoose)
+- 📍 **Nearby Recommendations**
+  - Find hotels and restaurants near a selected location
 
-Authentication: JWT & Bcrypt.js
+---
 
-Validation: Zod (planned) / Manual validation
+## 🛠️ Tech Stack
 
-External APIs
-Google Maps Platform:
+### Frontend (Client)
+- ⚛️ **React.js** (Vite)
+- 🎨 **Tailwind CSS**
+- 🗺️ **@react-google-maps/api**
+- 🔄 **React Context API** (State Management)
+- 🌐 **Axios** (HTTP Client)
 
-Maps JavaScript API
+### Backend (Server)
+- 🟢 **Node.js**
+- 🚀 **Express.js**
+- 🍃 **MongoDB** (Mongoose)
+- 🔐 **JWT Authentication**
+- 🔑 **bcrypt.js** (Password hashing)
+- ✅ **Zod** (Planned) / Manual validation
 
-Places API (Autocomplete)
+---
 
-Geocoding API
+## 🌐 External APIs
+- **Google Maps Platform**
+  - Maps JavaScript API
+  - Places API (Autocomplete)
+  - Geocoding API
 
-OpenWeatherMap API: Current weather data.
+- **OpenWeatherMap API**
+  - Real-time weather data
 
-⚙️ Environment Variables
-To run this project, you need to set up environment variables in both client and server folders.
+---
 
-1. Backend (.env)
-Create a file server/.env:
+## ⚙️ Environment Variables
 
-Code snippet
+To run this project locally, you must configure environment variables for both **server** and **client**.
+
+### 1️⃣ Backend Environment (`server/.env`)
+Create a file at `server/.env`:
+
+```env
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/tourist-checker
 JWT_SECRET=your_super_secret_key_123
 WEATHER_API_KEY=your_openweathermap_api_key
-2. Frontend (.env)
-Create a file client/.env:
 
-Code snippet
+2️⃣ Frontend Environment (client/.env)
+
+Create a file at client/.env:
+
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
 🏃‍♂️ Getting Started
-1. Clone the Repository
-Bash
+1️⃣ Clone the Repository
 git clone https://github.com/your-username/tourist-checker.git
 cd tourist-checker
-2. Setup Backend
-Bash
-cd server
-npm install        # Install dependencies
-npm run dev        # Start server (runs on port 5000)
-You should see: 🚀 Server running on port 5000 and ✅ MongoDB Connected
 
-3. Setup Frontend
+2️⃣ Setup Backend
+cd server
+npm install
+npm run dev
+
+
+You should see:
+
+🚀 Server running on port 5000
+✅ MongoDB Connected
+
+3️⃣ Setup Frontend
+
 Open a new terminal:
 
-Bash
 cd client
-npm install        # Install dependencies
-npm run dev        # Start React app
-Open http://localhost:5173 in your browser.
+npm install
+npm run dev
+
+
+Now open:
+
+http://localhost:5173
 
 📂 Project Structure
-Bash
 tourist-checker/
 │
-├── client/                 # React Frontend
+├── client/                  # React Frontend
 │   ├── src/
-│   │   ├── components/     # Reusable UI (Map, Weather, Navbar)
-│   │   ├── pages/          # Full pages (Home, Login, Register)
-│   │   ├── context/        # Auth State Management
-│   │   └── App.jsx         # Routing & Layout
-│   └── .env                # API Keys for Frontend
+│   │   ├── components/      # Reusable UI (Map, Weather, Navbar)
+│   │   ├── pages/           # Pages (Home, Login, Register)
+│   │   ├── context/         # Authentication State
+│   │   └── App.jsx          # Routing & Layout
+│   └── .env                 # Frontend environment variables
 │
-├── server/                 # Express Backend
-│   ├── models/             # Database Schemas (User, Place)
-│   ├── routes/             # API Endpoints (Auth, Weather)
-│   ├── controllers/        # Logic for endpoints
-│   ├── index.js            # Server entry point
-│   └── .env                # API Keys & DB Connection
+├── server/                  # Express Backend
+│   ├── models/              # MongoDB Schemas (User, Place)
+│   ├── routes/              # API Routes (Auth, Weather)
+│   ├── controllers/         # Business Logic
+│   ├── index.js             # Server Entry Point
+│   └── .env                 # Backend environment variables
 │
-└── README.md               # Documentation
+└── README.md                # Project Documentation
+
 🤝 Contributing
-Contributions are welcome!
 
-Fork the project.
+Contributions are welcome and appreciated 🙌
 
-Create your feature branch (git checkout -b feature/AmazingFeature).
+Fork the project
 
-Commit your changes (git commit -m 'Add some AmazingFeature').
+Create your feature branch:
 
-Push to the branch (git push origin feature/AmazingFeature).
+git checkout -b feature/AmazingFeature
 
-Open a Pull Request.
+
+Commit your changes:
+
+git commit -m "Add AmazingFeature"
+
+
+Push to the branch:
+
+git push origin feature/AmazingFeature
+
+
+Open a Pull Request
+
+📌 Author
+
+Thajeevan Vasanth
+Software Engineering | MERN Stack Developer
