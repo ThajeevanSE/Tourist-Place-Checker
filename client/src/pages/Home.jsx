@@ -3,12 +3,18 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import Map from '../components/Map';
 import SearchBar from '../components/SearchBar';
 import Weather from '../components/Weather';
+import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // 1. Define libraries OUTSIDE the component to fix the "Performance Warning"
 const libraries = ['places'];
 
 const Home = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const { user } = useContext(AuthContext); // Get logged in user
+  const navigate = useNavigate();
 
   // 2. Load the Google Maps Script here (Centralized Loading)
   const { isLoaded, loadError } = useJsApiLoader({
@@ -16,6 +22,31 @@ const Home = () => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries, // Use the constant variable
   });
+  const addToFavorites = async () => {
+    if (!user) {
+      alert("Please login to save places!");
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('/api/favorites', {
+        placeId: selectedLocation.placeId || "unknown", // Ensure placeId exists
+        name: selectedLocation.address.split(',')[0],
+        address: selectedLocation.address,
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      alert("Place added to favorites! ❤️");
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Error saving place");
+    }
+  };
 
   const handlePlaceSelect = (locationData) => {
     setSelectedLocation(locationData);
@@ -46,9 +77,12 @@ const Home = () => {
       <p className="text-gray-600 mb-4">{selectedLocation.address}</p>
 
       <div className="flex gap-3">
-         <button className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition">
-          Add to Favorites ❤️
-        </button>
+         <button 
+  onClick={addToFavorites} // 👈 Add this
+  className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
+>
+  Add to Favorites ❤️
+</button>
         <button className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition">
           Start Plan 📅
         </button>
