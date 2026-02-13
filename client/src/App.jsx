@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register'; 
 import { AuthProvider } from './context/AuthContext'; 
 import Favorites from './pages/Favorites';
+import Trips from './pages/Trips';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Link to="/favorites" className="hover:text-blue-300">Favorites</Link> {/* 👈 Add this */}
   <Link to="/login" className="hover:text-blue-300">Login</Link>
   <Link to="/register" className="hover:text-blue-300">Register</Link>
+  <Link to="/trips" className="hover:text-blue-300">My Trips</Link>
           </div>
         </nav>
 
@@ -24,6 +26,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/trips" element={<Trips />} />
           </Routes>
         </div>
       </Router>

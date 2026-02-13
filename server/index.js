@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
+import tripRoutes from './routes/tripRoutes.js';
 
 // 1. Force load the .env file from the current directory
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +45,7 @@ mongoose
     app.use('/api/auth', authRoutes);
     app.use('/api/weather', weatherRoutes);
     app.use('/api/favorites', favoritesRoutes);
+    app.use('/api/trips', tripRoutes);
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
   .catch((err) => console.error('❌ MongoDB Connection Error:', err));
