@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Calendar, Trash2, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Trips = () => {
   const [trips, setTrips] = useState([]);
   const [formData, setFormData] = useState({ title: '', startDate: '', endDate: '' });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Load trips on page load
   useEffect(() => {
@@ -103,7 +105,7 @@ const Trips = () => {
               <p className="text-gray-500 text-sm mt-2">{trip.places.length} places to visit</p>
               
               <div className="mt-4 flex justify-between items-center border-t pt-4">
-                <button className="text-blue-600 font-semibold text-sm hover:underline">View Details →</button>
+                <button onClick={() => navigate(`/trips/${trip._id}`)} className="text-blue-600 font-semibold text-sm hover:underline">View Details →</button>
                 <button 
                   onClick={() => handleDelete(trip._id)}
                   className="text-red-500 hover:bg-red-50 p-2 rounded-full"

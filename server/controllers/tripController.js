@@ -44,3 +44,65 @@ export const deleteTrip = async (req, res) => {
     res.status(500).json({ message: "Error deleting trip" });
   }
 };
+
+export const addPlaceToTrip = async (req, res) => {
+  try {
+    const { tripId } = req.params;
+    const { placeId, name, address, lat, lng } = req.body;
+
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) return res.status(404).json({ message: "Trip not found" });
+    
+    // Check if user owns this trip
+    if (trip.userId.toString() !== req.user.id) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    // Check if place is already in the trip
+    const exists = trip.places.find(p => p.placeId === placeId);
+    if (exists) return res.status(400).json({ message: "Place already added to this trip" });
+
+    // Add place
+    trip.places.push({ placeId, name, address, lat, lng });
+    await trip.save();
+
+    res.status(200).json({ message: "Place added to trip!", trip });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding place to trip" });
+  }
+};
+// 5. Get Single Trip by ID
+export const getTripById = async (req, res) => {
+  try {
+    const trip = await Trip.findById(req.params.id);
+    if (!trip) return res.status(404).json({ message: "Trip not found" });
+    
+    // Security: Ensure user owns this trip
+    if (trip.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    
+    res.status(200).json(trip);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching trip details" });
+  }
+};
+
+// 6. Remove a Place from a Trip
+export const removePlaceFromTrip = async (req, res) => {
+  try {
+    const { tripId, placeId } = req.params;
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) return res.status(404).json({ message: "Trip not found" });
+
+    // Filter out the place to remove it
+    trip.places = trip.places.filter(p => p.placeId !== placeId);
+    await trip.save();
+
+    res.status(200).json(trip);
+  } catch (error) {
+    res.status(500).json({ message: "Error removing place" });
+  }
+};

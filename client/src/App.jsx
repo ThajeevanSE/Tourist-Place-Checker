@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import { AuthProvider } from './context/AuthContext'; 
 import Favorites from './pages/Favorites';
 import Trips from './pages/Trips';
+import TripDetails from './pages/TripDetails';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/trips" element={<Trips />} />
+            <Route path="/trips/:id" element={<TripDetails />} />
           </Routes>
         </div>
       </Router>

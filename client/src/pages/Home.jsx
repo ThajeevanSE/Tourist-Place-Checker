@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import TripSelector from '../components/TripSelector';
 
 // 1. Define libraries OUTSIDE the component to fix the "Performance Warning"
 const libraries = ['places'];
@@ -15,6 +16,7 @@ const Home = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const { user } = useContext(AuthContext); // Get logged in user
   const navigate = useNavigate();
+  const [isTripModalOpen, setIsTripModalOpen] = useState(false);
 
   // 2. Load the Google Maps Script here (Centralized Loading)
   const { isLoaded, loadError } = useJsApiLoader({
@@ -83,9 +85,12 @@ const Home = () => {
 >
   Add to Favorites ❤️
 </button>
-        <button className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition">
-          Start Plan 📅
-        </button>
+        <button 
+  onClick={() => setIsTripModalOpen(true)} // 👈 Open Modal
+  className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition"
+>
+  Add to Trip 📅
+</button>
       </div>
     </div>
 
@@ -94,7 +99,20 @@ const Home = () => {
 
   </div>
 )}
-    </div>
+{/* Trip Selector Modal */}
+  <TripSelector 
+    isOpen={isTripModalOpen} 
+    onClose={() => setIsTripModalOpen(false)} 
+    placeData={{
+      // Ensure we pass all necessary data safely
+      placeId: selectedLocation?.placeId,
+      name: selectedLocation?.address?.split(',')[0], // Simple logic to guess name
+      address: selectedLocation?.address,
+      lat: selectedLocation?.lat,
+      lng: selectedLocation?.lng
+    }} 
+  />
+</div> 
   );
 };
 
