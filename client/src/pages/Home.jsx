@@ -7,15 +7,14 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import TripSelector from '../components/TripSelector';
-import { MapPin, Star, Plus } from 'lucide-react'; // Icons for the list
+import { MapPin, Star, Plus } from 'lucide-react'; 
 
-// 👇 IMPORTANT: Added 'marker' to libraries. This is required for your Map code to work!
 const libraries = ['places', 'marker'];
 
 const Home = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [touristPlaces, setTouristPlaces] = useState([]); // 👈 Store list of places
-  const [placeToAdd, setPlaceToAdd] = useState(null); // 👈 Track which place to add (Main or from List)
+  const [touristPlaces, setTouristPlaces] = useState([]); // Store list of places
+  const [placeToAdd, setPlaceToAdd] = useState(null); // Track which place to add (Main or from List)
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
@@ -54,10 +53,10 @@ const Home = () => {
 
   const handlePlaceSelect = (locationData) => {
     setSelectedLocation(locationData);
-    setTouristPlaces([]); // Clear list on new search
+    setTouristPlaces([]); 
   };
 
-  // 👇 Handle opening modal for the MAIN search or a LIST item
+  //  Handle opening modal for the MAIN search or a LIST item
   const openTripModal = (place = null) => {
     if (place) {
       // Adding from the list
@@ -93,7 +92,7 @@ const Home = () => {
       <SearchBar onSelectPlace={handlePlaceSelect} />
 
       <div className="mt-6 border-2 border-gray-200 rounded-xl overflow-hidden shadow-lg">
-        {/* 👇 Pass callback to receive places */}
+        {/* Pass callback to receive places */}
         <Map 
           selectedLocation={selectedLocation} 
           onPlacesFound={(places) => setTouristPlaces(places)} 
@@ -115,7 +114,7 @@ const Home = () => {
                 Add to Favorites ❤️
               </button>
               <button 
-                onClick={() => openTripModal(null)} // Pass null to use selectedLocation
+                onClick={() => openTripModal(null)} 
                 className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition"
               >
                 Add to Trip 📅
@@ -163,7 +162,7 @@ const Home = () => {
                   </p>
 
                   <button 
-                    onClick={() => openTripModal(place)} // Add specific place
+                    onClick={() => openTripModal(place)} 
                     className="w-full mt-auto bg-blue-50 text-blue-600 py-2 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition flex items-center justify-center gap-2"
                   >
                     <Plus size={18} /> Add to Itinerary
@@ -179,7 +178,7 @@ const Home = () => {
       <TripSelector 
         isOpen={isTripModalOpen} 
         onClose={() => setIsTripModalOpen(false)} 
-        placeData={placeToAdd} // Use the dynamic state
+        placeData={placeToAdd} 
       />
     </div> 
   );

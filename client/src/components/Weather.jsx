@@ -15,7 +15,7 @@ const Weather = ({ lat, lng }) => {
   const fetchWeather = async () => {
     try {
       setLoading(true);
-      // Call YOUR backend, not OpenWeather directly
+      // Call our backend API which in turn calls OpenWeatherMap
       const res = await axios.get(`/api/weather?lat=${lat}&lng=${lng}`);
       setWeather(res.data);
       setLoading(false);

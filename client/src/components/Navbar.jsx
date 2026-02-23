@@ -24,7 +24,7 @@ const Navbar = () => {
         {/* Links */}
         <div className="flex items-center gap-6">
           {user ? (
-            // 👇 Show these ONLY if logged in
+            //  Show these ONLY if logged in
             <>
               <Link to="/" className="hover:text-blue-200">Home</Link>
               <Link to="/trips" className="hover:text-blue-200">My Trips</Link>
@@ -41,7 +41,7 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            // 👇 Show these ONLY if logged out
+            //  Show these ONLY if logged out
             <div className="flex gap-4">
               <Link to="/login" className="hover:text-blue-200 font-medium">Login</Link>
               <Link to="/register" className="bg-white text-blue-600 px-4 py-1 rounded hover:bg-gray-100 font-medium transition">Register</Link>

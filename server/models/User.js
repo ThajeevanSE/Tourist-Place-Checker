@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// 1. Define this FIRST (before using it)
+
 const favoriteSchema = new mongoose.Schema({
   placeId: { type: String, required: true }, 
   name: { type: String, required: true },
@@ -9,7 +9,7 @@ const favoriteSchema = new mongoose.Schema({
   lng: { type: Number }
 }, { _id: false }); 
 
-// 2. Now use it inside userSchema
+//userSchema
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },

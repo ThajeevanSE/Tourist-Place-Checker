@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { MapPin, Trash2, Calendar, ArrowLeft, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // ✅ Fixed Import
+import autoTable from 'jspdf-autotable'; 
 
 const TripDetails = () => {
   const { id } = useParams();
@@ -58,7 +58,7 @@ const TripDetails = () => {
       tableRows.push(placeData);
     });
 
-    // ✅ Fixed: Pass 'doc' as the first argument
+    
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,

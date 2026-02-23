@@ -95,7 +95,7 @@ const Trips = () => {
 
       alert("Magic Trip Generated Successfully! 🪄");
       setShowAIForm(false);
-      fetchTrips(); // Refresh the list to show the new trip
+      fetchTrips(); 
 
     } catch (error) {
       console.error(error);

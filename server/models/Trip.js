@@ -16,7 +16,7 @@ const tripSchema = new mongoose.Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   
-  // 👇 CHANGE THIS: Use the schema instead of String array
+  //Use the schema instead of String array
   places: [tripPlaceSchema], 
   
   createdAt: { type: Date, default: Date.now }
