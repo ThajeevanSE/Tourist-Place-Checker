@@ -1,38 +1,60 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register'; 
-import { AuthProvider } from './context/AuthContext'; 
+import Register from './pages/Register';
 import Favorites from './pages/Favorites';
 import Trips from './pages/Trips';
 import TripDetails from './pages/TripDetails';
+import PrivateRoute from './components/PrivateRoute'; // 👈 Import the guard
 
 function App() {
   return (
-    <AuthProvider> 
-      <Router>
-        <nav className="bg-gray-800 p-4 text-white flex justify-between items-center">
-          <Link to="/" className="font-bold text-xl">🏝️ Tourist Checker</Link>
-          <div className="flex gap-4">
-            <Link to="/favorites" className="hover:text-blue-300">Favorites</Link> {/* 👈 Add this */}
-  <Link to="/login" className="hover:text-blue-300">Login</Link>
-  <Link to="/register" className="hover:text-blue-300">Register</Link>
-  <Link to="/trips" className="hover:text-blue-300">My Trips</Link>
-          </div>
-        </nav>
+    <>
+      <Navbar />
+      <Routes>
+        {/* Public Routes (Anyone can see) */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        <div className="container mx-auto p-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/trips" element={<Trips />} />
-            <Route path="/trips/:id" element={<TripDetails />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+        {/* 👇 PROTECTED ROUTES (Must be logged in) */}
+        <Route 
+          path="/" 
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/favorites" 
+          element={
+            <PrivateRoute>
+              <Favorites />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/trips" 
+          element={
+            <PrivateRoute>
+              <Trips />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/trips/:id" 
+          element={
+            <PrivateRoute>
+              <TripDetails />
+            </PrivateRoute>
+          } 
+        />
+        
+        {/* Catch-all: Redirect unknown pages to Home (which then redirects to Login) */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 }
 

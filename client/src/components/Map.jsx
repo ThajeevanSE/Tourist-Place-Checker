@@ -11,7 +11,8 @@ const defaultCenter = {
   lng: 79.8612
 };
 
-const Map = ({ selectedLocation }) => {
+//Added onPlacesFound prop
+const Map = ({ selectedLocation, onPlacesFound }) => {
   const [map, setMap] = useState(null);
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -39,7 +40,6 @@ const Map = ({ selectedLocation }) => {
 
           if (!Place || !Place.searchNearby) {
              console.warn("New Places API not available, trying legacy...");
-             // Fallback to legacy if New API fails (though your error suggests Legacy is blocked)
              const service = new window.google.maps.places.PlacesService(map);
              service.nearbySearch({
                location: selectedLocation,
@@ -51,9 +51,10 @@ const Map = ({ selectedLocation }) => {
              return;
           }
 
-          // MODERN SEARCH (V3)
+          // MODERN SEARCH
           const request = {
-            fields: ['displayName', 'location', 'rating', 'userRatingCount', 'id', 'formattedAddress'],
+            // Added 'photos' and 'editorialSummary' here
+            fields: ['displayName', 'location', 'rating', 'userRatingCount', 'id', 'formattedAddress', 'photos', 'editorialSummary'],
             locationRestriction: {
               center: selectedLocation,
               radius: 5000, // 5km
@@ -66,16 +67,25 @@ const Map = ({ selectedLocation }) => {
           
           if (places && places.length > 0) {
             console.log("Found modern places:", places.length);
-            // Transform data to match our old state structure
+            
             const formattedPlaces = places.map(p => ({
               place_id: p.id,
               geometry: { location: p.location },
               name: p.displayName,
               rating: p.rating,
               user_ratings_total: p.userRatingCount,
-              vicinity: p.formattedAddress
+              vicinity: p.formattedAddress,
+              //Get Photo and Summary
+              photo: p.photos && p.photos.length > 0 ? p.photos[0].getURI({ maxWidth: 400 }) : null,
+              summary: p.editorialSummary
             }));
+            
             setNearbyPlaces(formattedPlaces);
+
+            //Send data back to Home.jsx
+            if (onPlacesFound) {
+              onPlacesFound(formattedPlaces);
+            }
           }
         } catch (error) {
           console.error("Error fetching nearby places:", error);
@@ -93,7 +103,7 @@ const Map = ({ selectedLocation }) => {
       zoom={selectedLocation ? 14 : 10}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      options={{ mapId: "DEMO_MAP_ID" }} // Required for Advanced Markers (use DEMO_MAP_ID for dev)
+      options={{ mapId: "DEMO_MAP_ID" }} 
     >
       {/* 1. Main Marker */}
       {selectedLocation && (
@@ -120,9 +130,12 @@ const Map = ({ selectedLocation }) => {
           position={selectedMarker.geometry.location}
           onCloseClick={() => setSelectedMarker(null)}
         >
-          <div className="p-2 min-w-[150px]">
+          <div className="p-2 min-w-[150px] max-w-xs">
             <h3 className="font-bold text-sm mb-1">{selectedMarker.name}</h3>
-            <p className="text-xs text-gray-600 mb-1">{selectedMarker.vicinity}</p>
+            {selectedMarker.photo && (
+              <img src={selectedMarker.photo} alt="View" className="w-full h-24 object-cover mb-2 rounded" />
+            )}
+            <p className="text-xs text-gray-600 mb-1">{selectedMarker.summary || selectedMarker.vicinity}</p>
             <div className="flex items-center gap-1">
               <span className="text-yellow-500 text-xs">⭐</span>
               <span className="text-xs font-medium">
