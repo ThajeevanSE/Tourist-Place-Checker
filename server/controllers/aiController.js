@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { createNotification } from './notificationController.js';
 
 export const generateTrip = async (req, res) => {
   try {
@@ -38,10 +39,19 @@ export const generateTrip = async (req, res) => {
     const cleanJsonString = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
     const itinerary = JSON.parse(cleanJsonString);
 
-    res.status(200).json({ 
+    res.status(200).json({
       title: `${days} Days in ${destination}`,
-      places: itinerary 
+      places: itinerary
     });
+
+    // Create notification
+    await createNotification(
+      req.user.id,
+      'AI Plan Ready!',
+      `AI has generated a ${days}-day itinerary for ${destination}.`,
+      'recommendation',
+      '/'
+    );
 
   } catch (error) {
     console.error("AI Generation Error:", error);

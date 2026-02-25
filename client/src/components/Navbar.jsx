@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Map, LogOut } from 'lucide-react';
+import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -29,10 +30,11 @@ const Navbar = () => {
               <Link to="/" className="hover:text-blue-200">Home</Link>
               <Link to="/trips" className="hover:text-blue-200">My Trips</Link>
               <Link to="/favorites" className="hover:text-blue-200">Favorites</Link>
-              
+
               <div className="flex items-center gap-4 ml-4 pl-4 border-l border-blue-400">
+                <NotificationBell />
                 <span className="text-sm font-medium">Hello, {user.name}</span>
-                <button 
+                <button
                   onClick={handleLogout}
                   className="flex items-center gap-1 bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition"
                 >

@@ -15,6 +15,7 @@ import weatherRoutes from './routes/weatherRoutes.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
 import tripRoutes from './routes/tripRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Force load the .env file from the current directory
 const __filename = fileURLToPath(import.meta.url);
@@ -41,11 +42,11 @@ console.log("-----------------");
 app.use(cors());
 
 // 2. Helmet: Secures HTTP headers
-app.use(helmet()); 
+app.use(helmet());
 
 // 3. Express JSON & URL Encoded
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // 4. Mongo Sanitize (Custom Bug-Fix Version)
 // We manually sanitize the objects to prevent the "getter" crash in newer Express versions
@@ -62,7 +63,7 @@ const limiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per 15 minutes
   message: { message: "Too many requests from this IP, please try again later." }
 });
-app.use('/api', limiter); 
+app.use('/api', limiter);
 
 // ==========================================
 // 🚀 MOUNT ROUTES
@@ -77,14 +78,16 @@ app.use('/api/weather', weatherRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // ==========================================
 // 🗄️ DATABASE CONNECTION & SERVER START
 // ==========================================
-
+const url = process.env.MONGO_URI;
+console.log("Attempting to connect to MongoDB at:", url);
 if (!process.env.MONGO_URI) {
   console.error("❌ CRITICAL ERROR: MONGO_URI is missing. Check your .env file!");
-  process.exit(1); 
+  process.exit(1);
 }
 
 mongoose
