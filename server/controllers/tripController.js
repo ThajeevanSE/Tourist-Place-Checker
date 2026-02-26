@@ -1,4 +1,5 @@
 import Trip from '../models/Trip.js';
+import { createNotification } from './notificationController.js';
 
 // 1. Create a New Trip
 export const createTrip = async (req, res) => {
@@ -18,6 +19,16 @@ export const createTrip = async (req, res) => {
     });
 
     await newTrip.save();
+
+    // Create notification
+    await createNotification(
+      req.user.id,
+      'New Trip Created!',
+      `You've successfully created your trip: ${title}.`,
+      'trip',
+      `/trips/${newTrip._id}`
+    );
+
     res.status(201).json(newTrip);
   } catch (error) {
     res.status(500).json({ message: "Error creating trip" });
@@ -53,7 +64,7 @@ export const addPlaceToTrip = async (req, res) => {
     const trip = await Trip.findById(tripId);
 
     if (!trip) return res.status(404).json({ message: "Trip not found" });
-    
+
     // Check if user owns this trip
     if (trip.userId.toString() !== req.user.id) {
       return res.status(401).json({ message: "Not authorized" });
@@ -67,6 +78,15 @@ export const addPlaceToTrip = async (req, res) => {
     trip.places.push({ placeId, name, address, lat, lng });
     await trip.save();
 
+    // Create notification
+    await createNotification(
+      req.user.id,
+      'Place Added!',
+      `Added "${name}" to your trip: ${trip.title}.`,
+      'trip',
+      `/trips/${trip._id}`
+    );
+
     res.status(200).json({ message: "Place added to trip!", trip });
   } catch (error) {
     res.status(500).json({ message: "Error adding place to trip" });
@@ -77,12 +97,12 @@ export const getTripById = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
-    
+
     // Security: Ensure user owns this trip
     if (trip.userId.toString() !== req.user.id) {
       return res.status(403).json({ message: "Access denied" });
     }
-    
+
     res.status(200).json(trip);
   } catch (error) {
     res.status(500).json({ message: "Error fetching trip details" });

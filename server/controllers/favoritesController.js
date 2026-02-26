@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { createNotification } from './notificationController.js';
 
 export const addFavorite = async (req, res) => {
   try {
@@ -10,10 +11,10 @@ export const addFavorite = async (req, res) => {
     const { placeId, name, address, lat, lng } = req.body;
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
-        console.log("❌ User not found in DB");
-        return res.status(404).json({ message: "User not found" });
+      console.log("❌ User not found in DB");
+      return res.status(404).json({ message: "User not found" });
     }
     console.log("2. User found:", user.email);
 
@@ -24,9 +25,18 @@ export const addFavorite = async (req, res) => {
 
     console.log("3. Pushing to favorites...");
     user.favorites.push({ placeId, name, address, lat, lng });
-    
+
     await user.save();
     console.log("4. Saved successfully!");
+
+    // Create notification
+    await createNotification(
+      req.user.id,
+      'New Favorite!',
+      `You've added ${name} to your favorites list.`,
+      'recommendation',
+      '/favorites'
+    );
 
     res.status(200).json({ message: "Added to favorites!", favorites: user.favorites });
   } catch (error) {

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { MapPin, Trash2, Calendar, ArrowLeft, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; 
+import autoTable from 'jspdf-autotable';
 
 const TripDetails = () => {
   const { id } = useParams();
@@ -58,7 +58,7 @@ const TripDetails = () => {
       tableRows.push(placeData);
     });
 
-    
+
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
@@ -111,8 +111,8 @@ const TripDetails = () => {
             </span>
           </div>
         </div>
-        
-        <button 
+
+        <button
           onClick={downloadPDF}
           className="bg-white text-blue-700 px-4 py-2 rounded-lg font-bold shadow hover:bg-gray-100 flex items-center gap-2 transition"
         >
@@ -145,8 +145,8 @@ const TripDetails = () => {
                 </div>
                 <p className="text-gray-600 text-sm">{place.address}</p>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => removePlace(place.placeId)}
                 className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-full transition"
                 title="Remove from trip"
