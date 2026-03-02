@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { MapPin, Trash2, Calendar, ArrowLeft, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -18,7 +18,7 @@ const TripDetails = () => {
   const fetchTripDetails = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`/api/trips/${id}`, {
+      const res = await api.get(`/trips/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrip(res.data);
@@ -82,7 +82,7 @@ const TripDetails = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.delete(`/api/trips/${id}/place/${placeId}`, {
+      const res = await api.delete(`/trips/${id}/place/${placeId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrip(res.data);

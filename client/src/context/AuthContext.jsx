@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 export const AuthContext = createContext();
 
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       // Ideally, you'd verify the token with backend here, 
       // but for now, we'll just assume it's valid if it exists.
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser({ token }); // Simplified user state
     }
     setLoading(false);
@@ -21,13 +21,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
-      
+      const res = await api.post('/auth/login', { email, password });
+
       // Save data
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.result);
-      
+
       return { success: true };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Login failed' };
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await axios.post('/api/auth/register', { name, email, password });
+      await api.post('/auth/register', { name, email, password });
       return { success: true };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Registration failed' };
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken('');
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
+    delete api.defaults.headers.common['Authorization'];
   };
 
   return (

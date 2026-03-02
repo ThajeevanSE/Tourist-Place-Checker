@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Trash2, MapPin } from 'lucide-react';
 
 const Favorites = () => {
@@ -13,7 +13,7 @@ const Favorites = () => {
   const fetchFavorites = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/api/favorites', {
+      const res = await api.get('/favorites', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFavorites(res.data);
@@ -29,7 +29,7 @@ const Favorites = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`/api/favorites/${placeId}`, {
+      await api.delete(`/favorites/${placeId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Update UI immediately (remove item from list)
@@ -44,7 +44,7 @@ const Favorites = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">My Saved Places ❤️</h1>
-      
+
       {favorites.length === 0 ? (
         <p className="text-center text-gray-500">No favorites yet. Go search for some!</p>
       ) : (
@@ -56,10 +56,10 @@ const Favorites = () => {
                 <MapPin size={16} className="mt-1" />
                 {fav.address}
               </p>
-              
+
               <div className="flex justify-between items-center mt-4 border-t pt-4">
                 <span className="text-xs text-gray-400">Added to list</span>
-                <button 
+                <button
                   onClick={() => removeFavorite(fav.placeId)}
                   className="text-red-500 hover:text-red-700 flex items-center gap-1 text-sm font-semibold"
                 >

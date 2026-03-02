@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Cloud, Sun, CloudRain, Wind } from 'lucide-react'; // Icons
 
 const Weather = ({ lat, lng }) => {
@@ -16,7 +16,7 @@ const Weather = ({ lat, lng }) => {
     try {
       setLoading(true);
       // Call our backend API which in turn calls OpenWeatherMap
-      const res = await axios.get(`/api/weather?lat=${lat}&lng=${lng}`);
+      const res = await api.get(`/weather?lat=${lat}&lng=${lng}`);
       setWeather(res.data);
       setLoading(false);
     } catch (error) {
@@ -31,13 +31,13 @@ const Weather = ({ lat, lng }) => {
   return (
     <div className="bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-xl p-6 shadow-lg">
       <h3 className="text-xl font-bold mb-4">Current Weather 🌤️</h3>
-      
+
       <div className="flex items-center justify-between">
         <div>
           <p className="text-4xl font-bold">{Math.round(weather.main.temp)}°C</p>
           <p className="capitalize text-lg opacity-90">{weather.weather[0].description}</p>
         </div>
-        
+
         <div className="text-right">
           <div className="flex items-center gap-2 mb-1">
             <Wind size={20} />

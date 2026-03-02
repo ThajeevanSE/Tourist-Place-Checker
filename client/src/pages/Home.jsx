@@ -3,11 +3,11 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import Map from '../components/Map';
 import SearchBar from '../components/SearchBar';
 import Weather from '../components/Weather';
-import axios from 'axios';
+import api from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import TripSelector from '../components/TripSelector';
-import { MapPin, Star, Plus } from 'lucide-react'; 
+import { MapPin, Star, Plus } from 'lucide-react';
 
 const libraries = ['places', 'marker'];
 
@@ -34,7 +34,7 @@ const Home = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('/api/favorites', {
+      await api.post('/favorites', {
         placeId: selectedLocation.placeId || "unknown",
         name: selectedLocation.address.split(',')[0],
         address: selectedLocation.address,
@@ -53,7 +53,7 @@ const Home = () => {
 
   const handlePlaceSelect = (locationData) => {
     setSelectedLocation(locationData);
-    setTouristPlaces([]); 
+    setTouristPlaces([]);
   };
 
   //  Handle opening modal for the MAIN search or a LIST item
@@ -93,9 +93,9 @@ const Home = () => {
 
       <div className="mt-6 border-2 border-gray-200 rounded-xl overflow-hidden shadow-lg">
         {/* Pass callback to receive places */}
-        <Map 
-          selectedLocation={selectedLocation} 
-          onPlacesFound={(places) => setTouristPlaces(places)} 
+        <Map
+          selectedLocation={selectedLocation}
+          onPlacesFound={(places) => setTouristPlaces(places)}
         />
       </div>
 
@@ -107,14 +107,14 @@ const Home = () => {
             <p className="text-gray-600 mb-4">{selectedLocation.address}</p>
 
             <div className="flex gap-3">
-              <button 
-                onClick={addToFavorites} 
+              <button
+                onClick={addToFavorites}
                 className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition"
               >
                 Add to Favorites ❤️
               </button>
-              <button 
-                onClick={() => openTripModal(null)} 
+              <button
+                onClick={() => openTripModal(null)}
                 className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 transition"
               >
                 Add to Trip 📅
@@ -133,7 +133,7 @@ const Home = () => {
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <MapPin className="text-red-500" /> Top Attractions Nearby
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {touristPlaces.map((place) => (
               <div key={place.place_id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition border border-gray-100 flex flex-col">
@@ -156,13 +156,13 @@ const Home = () => {
                       <Star size={12} fill="currentColor" /> {place.rating || "N/A"}
                     </div>
                   </div>
-                  
+
                   <p className="text-sm text-gray-600 mb-3 line-clamp-3 flex-grow">
                     {place.summary || place.vicinity}
                   </p>
 
-                  <button 
-                    onClick={() => openTripModal(place)} 
+                  <button
+                    onClick={() => openTripModal(place)}
                     className="w-full mt-auto bg-blue-50 text-blue-600 py-2 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition flex items-center justify-center gap-2"
                   >
                     <Plus size={18} /> Add to Itinerary
@@ -175,12 +175,12 @@ const Home = () => {
       )}
 
       {/* Trip Selector Modal */}
-      <TripSelector 
-        isOpen={isTripModalOpen} 
-        onClose={() => setIsTripModalOpen(false)} 
-        placeData={placeToAdd} 
+      <TripSelector
+        isOpen={isTripModalOpen}
+        onClose={() => setIsTripModalOpen(false)}
+        placeData={placeToAdd}
       />
-    </div> 
+    </div>
   );
 };
 

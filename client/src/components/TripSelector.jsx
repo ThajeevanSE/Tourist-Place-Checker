@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { X } from 'lucide-react';
 
 const TripSelector = ({ isOpen, onClose, placeData }) => {
   const [trips, setTrips] = useState([]);
-  
+
   useEffect(() => {
     if (isOpen) fetchTrips();
   }, [isOpen]);
@@ -12,7 +12,7 @@ const TripSelector = ({ isOpen, onClose, placeData }) => {
   const fetchTrips = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('/api/trips', {
+      const res = await api.get('/trips', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrips(res.data);
@@ -24,7 +24,7 @@ const TripSelector = ({ isOpen, onClose, placeData }) => {
   const addToTrip = async (tripId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`/api/trips/${tripId}/add`, {
+      await api.post(`/trips/${tripId}/add`, {
         placeId: placeData.placeId || "unknown",
         name: placeData.name || placeData.address,
         address: placeData.address,
@@ -33,7 +33,7 @@ const TripSelector = ({ isOpen, onClose, placeData }) => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       alert("Added to trip successfully! ✅");
       onClose(); // Close modal
     } catch (error) {
@@ -49,7 +49,7 @@ const TripSelector = ({ isOpen, onClose, placeData }) => {
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-red-500">
           <X size={20} />
         </button>
-        
+
         <h2 className="text-xl font-bold mb-4">Add to which trip?</h2>
         <p className="text-sm text-gray-600 mb-4">Adding: <strong>{placeData?.name || placeData?.address}</strong></p>
 
@@ -58,7 +58,7 @@ const TripSelector = ({ isOpen, onClose, placeData }) => {
         ) : (
           <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
             {trips.map(trip => (
-              <button 
+              <button
                 key={trip._id}
                 onClick={() => addToTrip(trip._id)}
                 className="p-3 text-left border rounded hover:bg-blue-50 hover:border-blue-300 transition"

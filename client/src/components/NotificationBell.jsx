@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Trash2, Check, ExternalLink } from 'lucide-react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 
 const NotificationBell = () => {
@@ -31,7 +31,7 @@ const NotificationBell = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return;
-            const res = await axios.get('/api/notifications', {
+            const res = await api.get('/notifications', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNotifications(res.data);
@@ -44,7 +44,7 @@ const NotificationBell = () => {
     const markAsRead = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`/api/notifications/${id}/read`, {}, {
+            await api.put(`/notifications/${id}/read`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNotifications(notifications.map(n =>
@@ -59,7 +59,7 @@ const NotificationBell = () => {
     const markAllRead = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put('/api/notifications/read-all', {}, {
+            await api.put('/notifications/read-all', {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNotifications(notifications.map(n => ({ ...n, isRead: true })));
@@ -73,7 +73,7 @@ const NotificationBell = () => {
         e.stopPropagation();
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`/api/notifications/${id}`, {
+            await api.delete(`/notifications/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNotifications(notifications.filter(n => n._id !== id));
