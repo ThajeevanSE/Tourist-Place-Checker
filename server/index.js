@@ -66,7 +66,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // ==========================================
-// 🚀 MOUNT ROUTES
+//  MOUNT ROUTES
 // ==========================================
 
 app.get('/', (req, res) => {

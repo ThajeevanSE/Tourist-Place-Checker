@@ -6,7 +6,7 @@ import Register from './pages/Register';
 import Favorites from './pages/Favorites';
 import Trips from './pages/Trips';
 import TripDetails from './pages/TripDetails';
-import PrivateRoute from './components/PrivateRoute'; // 👈 Import the guard
+import PrivateRoute from './components/PrivateRoute'; 
 
 function App() {
   return (
