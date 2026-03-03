@@ -21,7 +21,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await api.post('/auth/login', { email, password });
+      // 👇 Explicitly added /api here to prevent Axios overwrite bugs
+      const res = await api.post('/api/auth/login', { email, password });
 
       // Save data
       localStorage.setItem('token', res.data.token);
@@ -36,7 +37,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await api.post('/auth/register', { name, email, password });
+      // 👇 Explicitly added /api here to prevent Axios overwrite bugs
+      await api.post('/api/auth/register', { name, email, password });
       return { success: true };
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Registration failed' };
