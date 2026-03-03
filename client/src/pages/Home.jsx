@@ -13,8 +13,8 @@ const libraries = ['places', 'marker'];
 
 const Home = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [touristPlaces, setTouristPlaces] = useState([]); // Store list of places
-  const [placeToAdd, setPlaceToAdd] = useState(null); // Track which place to add (Main or from List)
+  const [touristPlaces, setTouristPlaces] = useState([]);
+  const [placeToAdd, setPlaceToAdd] = useState(null);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
@@ -34,7 +34,8 @@ const Home = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await api.post('/favorites', {
+      // 👇 Fixed path: Added /api
+      await api.post('/api/favorites', {
         placeId: selectedLocation.placeId || "unknown",
         name: selectedLocation.address.split(',')[0],
         address: selectedLocation.address,
@@ -56,10 +57,8 @@ const Home = () => {
     setTouristPlaces([]);
   };
 
-  //  Handle opening modal for the MAIN search or a LIST item
   const openTripModal = (place = null) => {
     if (place) {
-      // Adding from the list
       setPlaceToAdd({
         placeId: place.place_id,
         name: place.name,
@@ -68,7 +67,6 @@ const Home = () => {
         lng: place.geometry.location.lng()
       });
     } else {
-      // Adding the main searched location
       setPlaceToAdd({
         placeId: selectedLocation?.placeId,
         name: selectedLocation?.address?.split(',')[0],
@@ -92,7 +90,6 @@ const Home = () => {
       <SearchBar onSelectPlace={handlePlaceSelect} />
 
       <div className="mt-6 border-2 border-gray-200 rounded-xl overflow-hidden shadow-lg">
-        {/* Pass callback to receive places */}
         <Map
           selectedLocation={selectedLocation}
           onPlacesFound={(places) => setTouristPlaces(places)}
@@ -101,7 +98,6 @@ const Home = () => {
 
       {selectedLocation && (
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left: Place Details */}
           <div className="p-6 bg-white rounded-lg shadow-md border-l-4 border-blue-500">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">📍 {selectedLocation.address.split(',')[0]}</h2>
             <p className="text-gray-600 mb-4">{selectedLocation.address}</p>
@@ -122,12 +118,10 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Right: Weather */}
           <Weather lat={selectedLocation.lat} lng={selectedLocation.lng} />
         </div>
       )}
 
-      {/* 👇 NEW SECTION: Tourist Places List */}
       {touristPlaces.length > 0 && (
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -137,7 +131,6 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {touristPlaces.map((place) => (
               <div key={place.place_id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition border border-gray-100 flex flex-col">
-                {/* Image */}
                 <div className="h-48 bg-gray-200 w-full overflow-hidden">
                   {place.photo ? (
                     <img src={place.photo} alt={place.name} className="w-full h-full object-cover" />
@@ -148,7 +141,6 @@ const Home = () => {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="p-5 flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{place.name}</h3>
@@ -174,7 +166,6 @@ const Home = () => {
         </div>
       )}
 
-      {/* Trip Selector Modal */}
       <TripSelector
         isOpen={isTripModalOpen}
         onClose={() => setIsTripModalOpen(false)}

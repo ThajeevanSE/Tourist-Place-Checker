@@ -13,7 +13,8 @@ const Favorites = () => {
   const fetchFavorites = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await api.get('/favorites', {
+      // 👇 Fixed path: Added /api
+      const res = await api.get('/api/favorites', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFavorites(res.data);
@@ -29,10 +30,10 @@ const Favorites = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await api.delete(`/favorites/${placeId}`, {
+      // 👇 Fixed path: Added /api
+      await api.delete(`/api/favorites/${placeId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Update UI immediately (remove item from list)
       setFavorites(favorites.filter(fav => fav.placeId !== placeId));
     } catch (error) {
       alert("Error removing favorite");

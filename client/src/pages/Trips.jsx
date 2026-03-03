@@ -8,10 +8,7 @@ const Trips = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Standard Form State
   const [formData, setFormData] = useState({ title: '', startDate: '', endDate: '' });
-
-  // AI Form State
   const [showAIForm, setShowAIForm] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiForm, setAiForm] = useState({ destination: '', days: 3, vibe: 'relaxing', startDate: '' });
@@ -23,7 +20,8 @@ const Trips = () => {
   const fetchTrips = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await api.get('/trips', {
+      // 👇 Fixed path: Added /api
+      const res = await api.get('/api/trips', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrips(res.data);
@@ -34,12 +32,12 @@ const Trips = () => {
     }
   };
 
-  // --- 1. Standard Manual Trip Creation ---
   const handleCreateTrip = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const res = await api.post('/trips', formData, {
+      // 👇 Fixed path: Added /api
+      const res = await api.post('/api/trips', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrips([...trips, res.data]);
@@ -50,7 +48,6 @@ const Trips = () => {
     }
   };
 
-  // --- 2. MAGIC AI TRIP CREATION ✨ ---
   const handleAIGenerate = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -58,22 +55,21 @@ const Trips = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
 
-      // Step A: Ask Gemini to generate the itinerary
-      const aiRes = await api.post('/ai/generate', {
+      // 👇 Fixed path: Added /api
+      const aiRes = await api.post('/api/ai/generate', {
         destination: aiForm.destination,
         days: Number(aiForm.days),
         vibe: aiForm.vibe
       }, { headers });
 
-      const generatedData = aiRes.data; // Gets { title, places }
+      const generatedData = aiRes.data;
 
-      // Step B: Calculate End Date based on how many days they selected
       const start = new Date(aiForm.startDate);
       const end = new Date(start);
       end.setDate(end.getDate() + Number(aiForm.days) - 1);
 
-      // Step C: Create the Trip Container in database
-      const tripRes = await api.post('/trips', {
+      // 👇 Fixed path: Added /api
+      const tripRes = await api.post('/api/trips', {
         title: `✨ AI: ${generatedData.title}`,
         startDate: start.toISOString(),
         endDate: end.toISOString()
@@ -81,11 +77,11 @@ const Trips = () => {
 
       const newTripId = tripRes.data._id;
 
-      // Step D: Loop through AI places and save them into the new trip
       for (let i = 0; i < generatedData.places.length; i++) {
         const place = generatedData.places[i];
-        await api.post(`/trips/${newTripId}/add`, {
-          placeId: `ai-gen-${Date.now()}-${i}`, // Fake ID since it's AI generated
+        // 👇 Fixed path: Added /api
+        await api.post(`/api/trips/${newTripId}/add`, {
+          placeId: `ai-gen-${Date.now()}-${i}`,
           name: place.name,
           address: place.address,
           lat: 0,
@@ -105,12 +101,12 @@ const Trips = () => {
     }
   };
 
-  // --- 3. Delete Trip ---
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this trip plan?")) return;
     try {
       const token = localStorage.getItem('token');
-      await api.delete(`/trips/${id}`, {
+      // 👇 Fixed path: Added /api
+      await api.delete(`/api/trips/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrips(trips.filter(t => t._id !== id));
@@ -123,8 +119,6 @@ const Trips = () => {
     <div className="container mx-auto p-4 max-w-6xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">My Trip Plans 📅</h1>
-
-        {/* Toggle AI Form Button */}
         <button
           onClick={() => setShowAIForm(!showAIForm)}
           className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-2 rounded-full font-bold shadow-lg hover:shadow-xl transition flex items-center gap-2"
@@ -133,7 +127,6 @@ const Trips = () => {
         </button>
       </div>
 
-      {/* --- FORM SECTION --- */}
       {showAIForm ? (
         <div className="bg-gradient-to-br from-indigo-50 to-purple-100 p-6 rounded-xl shadow-md mb-10 border border-purple-200">
           <h2 className="text-xl font-bold text-purple-800 mb-4 flex items-center gap-2">
@@ -212,7 +205,6 @@ const Trips = () => {
         </div>
       )}
 
-      {/* --- LIST SECTION --- */}
       {loading ? <p className="text-center mt-10 text-gray-500 text-xl">Loading trips...</p> : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {trips.length === 0 && <p className="text-center col-span-3 text-gray-500">No trips planned yet.</p>}
