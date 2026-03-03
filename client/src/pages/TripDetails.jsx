@@ -18,7 +18,8 @@ const TripDetails = () => {
   const fetchTripDetails = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await api.get(`/trips/${id}`, {
+      // 👇 FIXED: Added /api to the path
+      const res = await api.get(`/api/trips/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrip(res.data);
@@ -58,7 +59,6 @@ const TripDetails = () => {
       tableRows.push(placeData);
     });
 
-
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
@@ -82,7 +82,8 @@ const TripDetails = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await api.delete(`/trips/${id}/place/${placeId}`, {
+      // 👇 FIXED: Added /api to the path
+      const res = await api.delete(`/api/trips/${id}/place/${placeId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTrip(res.data);
